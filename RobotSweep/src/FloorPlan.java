@@ -10,7 +10,7 @@ public class FloorPlan {
     static String[][] floorPlan;
 
     public FloorPlan() {
-        this.floorPlan = null;
+        //this.floorPlan = null;
         floorPlan = new String[10][10];
     }
 
