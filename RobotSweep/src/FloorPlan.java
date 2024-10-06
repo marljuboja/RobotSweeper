@@ -7,13 +7,38 @@ public class FloorPlan {
 
     //Please keep in mind this is the layout of the room not what the robot has already seen
     //and taken note of
-    static String[][] floorPlan;
+    static String[][] floorPlan = new String[10][10];;
+
 
     public FloorPlan() {
         //this.floorPlan = null;
-        floorPlan = new String[10][10];
     }
 
+    public static String[][] getFloorPlan() {
+        floorPlan[0][0] = "006100";
+        floorPlan[0][1] = "001000";
+        floorPlan[0][2] = "006100";
+        floorPlan[0][3] = "001000";
+        floorPlan[0][4] = "001100";
+        floorPlan[0][5] = "001100";
+        floorPlan[0][6] = "001100";
+        floorPlan[0][7] = "001000";
+        floorPlan[0][8] = "006200";
+        floorPlan[0][9] = "006900";
+
+        floorPlan[1][0] = "003000";
+        floorPlan[1][1] = "004041";
+        floorPlan[1][2] = "003031";
+        floorPlan[1][3] = "200000";
+        floorPlan[1][4] = "210000";
+        floorPlan[1][5] = "210000";
+        floorPlan[1][6] = "200000";
+        floorPlan[1][7] = "200000";
+        floorPlan[1][8] = "004041";
+        floorPlan[1][9] = "007001";
+        return floorPlan;
+    }
+    //floorPlan
 
     //floor plan is a 10 by 10 two-dimensional array
     //each number is 4 digits representing four aspects of the tile
@@ -27,27 +52,8 @@ public class FloorPlan {
     //sixth is dirt; no dirt, dirt (0,1)
 
     //creating floor plan
-    floorPlan[0][0] = "006100";
-    floorPlan[0][1] = "001000";
-    floorPlan[0][2] = "006100";
-    floorPlan[0][3] = "001000";
-    floorPlan[0][4] = "001100";
-    floorPlan[0][5] = "001100";
-    floorPlan[0][6] = "001100";
-    floorPlan[0][7] = "001000";
-    floorPlan[0][8] = "006200";
-    floorPlan[0][9] = "006900";
 
-    floorPlan[1][0] = "003000";
-    floorPlan[1][1] = "004041";
-    floorPlan[1][2] = "003031";
-    floorPlan[1][3] = "200000";
-    floorPlan[1][4] = "210000";
-    floorPlan[1][5] = "210000";
-    floorPlan[1][6] = "200000";
-    floorPlan[1][7] = "200000";
-    floorPlan[1][8] = "004041";
-    floorPlan[1][9] = "007001";
+
 
 
     //System.out.println("The floor plan string in point(0,1) is: " + floorPlan[0][1]);
