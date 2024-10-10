@@ -113,27 +113,27 @@ public class FloorPlan {
         floorPlan[7][8] = "11000000000";
         floorPlan[7][9] = "11001000000";
 
-        floorPlan[8][0] = "00110000000";
-        floorPlan[8][1] = "00110000000";
-        floorPlan[8][2] = "00110000000";
-        floorPlan[8][3] = "00110000000";
-        floorPlan[8][4] = "00110000000";
-        floorPlan[8][5] = "00110000000";
-        floorPlan[8][6] = "00110000000";
-        floorPlan[8][7] = "00110000000";
-        floorPlan[8][8] = "00110000000";
-        floorPlan[8][9] = "00110000000";
+        floorPlan[8][0] = "10000100009";
+        floorPlan[8][1] = "10000000009";
+        floorPlan[8][2] = "10000000009";
+        floorPlan[8][3] = "10001000000";
+        floorPlan[8][4] = "00000100009";
+        floorPlan[8][5] = "00001000109";
+        floorPlan[8][6] = "10100100019";
+        floorPlan[8][7] = "10000000009";
+        floorPlan[8][8] = "10000000000";
+        floorPlan[8][9] = "11001000000";
 
-        floorPlan[9][0] = "00110000000";
-        floorPlan[9][1] = "00110000000";
-        floorPlan[9][2] = "00110000000";
-        floorPlan[9][3] = "00110000000";
-        floorPlan[9][4] = "00110000000";
-        floorPlan[9][5] = "00110000000";
-        floorPlan[9][6] = "00110000000";
-        floorPlan[9][7] = "00110000000";
-        floorPlan[9][8] = "00110000000";
-        floorPlan[9][9] = "00110000000";
+        floorPlan[9][0] = "12010100000";
+        floorPlan[9][1] = "10010000009";
+        floorPlan[9][2] = "10010000009";
+        floorPlan[9][3] = "10011000000";
+        floorPlan[9][4] = "03000100000";
+        floorPlan[9][5] = "00011000009";
+        floorPlan[9][6] = "10010100009";
+        floorPlan[9][7] = "10010000009";
+        floorPlan[9][8] = "10010000000";
+        floorPlan[9][9] = "10011000000";
 
         return floorPlan;
     }
