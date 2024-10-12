@@ -159,6 +159,13 @@ public class DetectChargeStation {
                 coor[1] = currentPositionY + 2;
             }
 
+            /*if (coor[0] == -1) {
+                return true;
+            }
+            else {
+                return false;
+            }*/
+
         return coor;
 
     }
