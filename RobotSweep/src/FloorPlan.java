@@ -9,9 +9,7 @@ public class FloorPlan {
     //and taken note of
     static String[][] floorPlan = new String[10][10];;
 
-
     public FloorPlan() {
-        //this.floorPlan = null;
     }
 
     //floor plan is a 10 by 10 two-dimensional array
