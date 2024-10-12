@@ -13,6 +13,9 @@ public class FloorSweeper {
     int dirt;
     //dirtCapacity is the maximum dirt the robot can hold
     final int dirtCapacity;
+    //posX and posY are the robots x and y positions, respectively
+    int posX;
+    int posY;
 
     public FloorSweeper(String[][] floorplan){
         learnedFloorPlan = new String[10][10];
