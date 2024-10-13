@@ -8,8 +8,5 @@ public class Main {
             }
             System.out.println();
         }
-
-        //int[] arr = DetectChargeStation.detectCS(7,2);
-        //System.out.println(" " + arr[0] + ", " + arr[1]);
     }
 }
