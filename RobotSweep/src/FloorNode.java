@@ -93,7 +93,7 @@ public class FloorNode {
     //Returns presence of obstacle on tile
     //0 = Nothing
     //1 = Furniture
-    //2 = 
+    //2 = Charging Station (passable)
     //3 = Stairs
     public int getObstacle(){
         return obstacle;
