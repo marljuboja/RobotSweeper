@@ -1,5 +1,4 @@
 import java.util.Random;
-// RoomMap Class
 
 public class RoomMap {
     private int[][] roomMap;
