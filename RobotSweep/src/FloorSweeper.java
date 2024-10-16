@@ -25,6 +25,8 @@ public class FloorSweeper {
         assignedFloorPlan = floorplan;
         dirtCapacity = 50;
         charge = 100;
+        //Add starting tile to learned floormap
+        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY]);
     }
 
     //Returns battery charge level of robot
@@ -99,4 +101,15 @@ public class FloorSweeper {
         }
     }
     
+    //Currently cleaning a tile reduces battery by 1, regardless of floor type
+    //Change this as soon as possible
+    //Will work as long as charge is available, ideally change so that cleaning stops before not enough charge left to return to CS
+    public void cleanTile(){
+        int currentDirt = learnedFloorPlan[posX][posY].getDirt();
+        while(currentDirt > 0 && getDirtLevel() < dirtCapacity && getCharge() > 0){
+            currentDirt = learnedFloorPlan[posX][posY].cleanDirt();
+            dirt++;
+            charge--;
+        }
+    }
 }
