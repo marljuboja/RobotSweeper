@@ -14,6 +14,7 @@ public class FloorSweeper {
     //dirtCapacity is the maximum dirt the robot can hold
     final int dirtCapacity;
     //posX and posY are the robots x and y positions, respectively
+    //
     private int posX;
     private int posY;
 
