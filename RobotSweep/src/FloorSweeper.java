@@ -1,32 +1,45 @@
+import java.util.ArrayList;
+
 public class FloorSweeper {
 
-    //learnedFloorPlan is the floor plan that the robot learns as it moves
-    FloorNode[][] learnedFloorPlan;
-    //assignedFloorPlan is the complete floor plan given to the robot to navigate
+    //The floor plan that the robot learns as it moves
+    private FloorNode[][] learnedFloorPlan;
+
+    //The complete floor plan given to the robot to navigate
     //!!!!!!!!!!!!!!!
     //THE ROBOT CANNOT SEARCH THIS FLOOR PLAN EXCEPT FOR ITS IMMEDIATE SURROUNDINGS!!
+    //DO NOT CHANGE THE ASSIGNED FLOORPLAN
     //!!!!!!!!!!!!!!!!!
-    final String[][] assignedFloorPlan;
-    //charge is the robot's remaining battery
+    private final String[][] assignedFloorPlan;
+
+    //Robot's remaining battery
     private int charge;
-    //dirtCapacity is how much dirt the robot is currently holding
+
+    //How much dirt the robot is currently holding
     private int dirt;
-    //dirtCapacity is the maximum dirt the robot can hold
-    final int dirtCapacity;
-    //posX and posY are the robots x and y positions, respectively
-    //
+
+    //The maximum dirt the robot can hold
+    private final int DIRT_CAPACITY = 50;
+
+    //Threshold at which Robot will be forced to return to charging station
+    private final int MIN_ALLOWED_CHARGE = 15;
+
+    //Robot's x and y positions, respectively
     private int posX;
     private int posY;
+
+    //True if returning to charging station, false if cleaning
+    private boolean returning;
 
     //Constructor for robot
     //Takes floorplan and stores locally, but only accesses entries immediately surrounding its current position
     public FloorSweeper(String[][] floorplan){
         learnedFloorPlan = new FloorNode[10][10];
         assignedFloorPlan = floorplan;
-        dirtCapacity = 50;
         charge = 100;
         //Add starting tile to learned floormap
-        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY]);
+        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY], posX, posY);
+        returning = false;
     }
 
     //Returns battery charge level of robot
@@ -55,7 +68,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY-1]);
+            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY-1], posX, posY-1);
             learnedFloorPlan[posX][posY-1] = temp;
             return temp;
         }
@@ -68,7 +81,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX+1][posY]);
+            FloorNode temp = new FloorNode(assignedFloorPlan[posX+1][posY], posX+1, posY);
             learnedFloorPlan[posX+1][posY] = temp;
             return temp;
         }
@@ -82,7 +95,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY+1]);
+            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY+1], posX, posY+1);
             learnedFloorPlan[posX][posY+1] = temp;
             return temp;
         }
@@ -95,7 +108,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX-1][posY]);
+            FloorNode temp = new FloorNode(assignedFloorPlan[posX-1][posY], posX-1, posY);
             learnedFloorPlan[posX-1][posY] = temp;
             return temp;
         }
@@ -106,10 +119,39 @@ public class FloorSweeper {
     //Will work as long as charge is available, ideally change so that cleaning stops before not enough charge left to return to CS
     public void cleanTile(){
         int currentDirt = learnedFloorPlan[posX][posY].getDirt();
-        while(currentDirt > 0 && getDirtLevel() < dirtCapacity && getCharge() > 0){
+        while(currentDirt > 0 && getDirtLevel() < DIRT_CAPACITY && getCharge() > 0){
             currentDirt = learnedFloorPlan[posX][posY].cleanDirt();
             dirt++;
             charge--;
         }
+    }
+
+    public void returnToStation(){
+        FloorNode closestStation = getClosestChargingStation();
+        while(posX != closestStation.posX() && posY != closestStation.posY()){
+            //TODO
+            //Requires movement functions to be implemented
+        }
+
+    }
+
+    private FloorNode getClosestChargingStation(){
+        ArrayList<FloorNode> foundStations = new ArrayList<FloorNode>();
+        for(int x = 0; x < learnedFloorPlan.length; x++){
+            for(int y = 0; y < learnedFloorPlan[x].length; y++){
+                if (learnedFloorPlan[x][y] != null && learnedFloorPlan[x][y].getChargingStation()){
+                    foundStations.add(learnedFloorPlan[x][y]);
+                }
+            }
+        }
+        FloorNode closest = foundStations.get(0);
+        int distance = closest.posX() + closest.posY();
+        for(FloorNode station: foundStations){
+            if (station.posX() + station.posY() < distance){
+                distance = station.posX() + station.posY();
+                closest = station;
+            }
+        }
+        return closest;
     }
 }
