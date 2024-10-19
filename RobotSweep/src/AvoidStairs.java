@@ -6,7 +6,7 @@ public class AvoidStairs {
                 (currentPositionY > -1) &&
                 ((FloorPlan.floorPlan[currentPositionX + 1][currentPositionY].substring(1, 2).equals("3")))) {
             if (DetectObstacle.detectObs(currentPositionX + 1, currentPositionY) == [-1,-1]) {
-
+                currentPositionX = currentPositionX + 1;
             }
 
         } else if ((currentPositionX < 10) && ((currentPositionY + 1) < 10) && (currentPositionX > -1) &&
