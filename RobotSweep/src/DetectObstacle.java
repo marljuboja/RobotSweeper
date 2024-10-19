@@ -12,74 +12,74 @@ public class DetectObstacle {
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX + 1][currentPositionY].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX+1][currentPositionY]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY]).getObstacle() == 3))) {
             coor[0] = currentPositionX + 1;
             coor[1] = currentPositionY;
         }
         else if ((currentPositionX < 10) && ((currentPositionY + 1) < 10) && (currentPositionX > -1) &&
                 ((currentPositionY + 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX][currentPositionY + 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY + 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY + 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX][currentPositionY+1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY+1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY+1]).getObstacle() == 3))) {
             coor[0] = currentPositionX;
             coor[1] = currentPositionY + 1;
         }
         else if (((currentPositionX + 1) < 10) && ((currentPositionY + 1) < 10) && ((currentPositionX + 1) > -1) &&
                 ((currentPositionY + 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX + 1][currentPositionY + 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY + 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY + 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX+1][currentPositionY+1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY+1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY+1]).getObstacle() == 3))) {
             coor[0] = currentPositionX + 1;
             coor[1] = currentPositionY + 1;
         }
         else if (((currentPositionX - 1) < 10) && ((currentPositionY - 1) < 10) && ((currentPositionX - 1) > -1) &&
                 ((currentPositionY - 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX - 1][currentPositionY - 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY - 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY - 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX-1][currentPositionY-1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY-1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY-1]).getObstacle() == 3))) {
             coor[0] = currentPositionX - 1;
             coor[1] = currentPositionY - 1;
         }
         else if (((currentPositionX - 1) < 10) && (currentPositionY < 10) && ((currentPositionX - 1) > -1) &&
                 (currentPositionY > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX - 1][currentPositionY].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX-1][currentPositionY]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY]).getObstacle() == 3))) {
             coor[0] = currentPositionX - 1;
             coor[1] = currentPositionY;
         }
         else if ((currentPositionX < 10) && ((currentPositionY - 1) < 10) && (currentPositionX > -1) &&
                 ((currentPositionY - 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX][currentPositionY - 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY - 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY - 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX][currentPositionY-1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY-1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY-1]).getObstacle() == 3))) {
             coor[0] = currentPositionX;
             coor[1] = currentPositionY - 1;
         }
 
         else if ((currentPositionX < 10) && ((currentPositionY) < 10) && (currentPositionX > -1) &&
                 ((currentPositionY) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX][currentPositionY].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX][currentPositionY].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle() == 3))) {
             coor[0] = currentPositionX;
             coor[1] = currentPositionY;
         }
         else if (((currentPositionX - 1) < 10) && ((currentPositionY + 1) < 10) && (currentPositionX > -1) &&
                 ((currentPositionY + 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX - 1][currentPositionY + 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY + 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX - 1][currentPositionY + 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX-1][currentPositionY+1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY+1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX-1][currentPositionY+1]).getObstacle() == 3))) {
             coor[0] = currentPositionX - 1;
             coor[1] = currentPositionY + 1;
         }
         else if (((currentPositionX + 1) < 10) && ((currentPositionY - 1) < 10) && ((currentPositionX + 1) > -1) &&
                 ((currentPositionY - 1) > -1) &&
-                ((FloorPlan.floorPlan[currentPositionX + 1][currentPositionY - 1].substring(1, 2).equals("1"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY - 1].substring(1, 2).equals("2"))
-                        || (FloorPlan.floorPlan[currentPositionX + 1][currentPositionY - 1].substring(1, 2).equals("3")))) {
+                ((new FloorNode(floorMap[currentPositionX+1][currentPositionY-1]).getObstacle() == 1)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY-1]).getObstacle() == 2)
+                        || (new FloorNode(floorMap[currentPositionX+1][currentPositionY-1]).getObstacle() == 3))) {
             coor[0] = currentPositionX + 1;
             coor[1] = currentPositionY - 1;
         }
