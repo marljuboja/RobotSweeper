@@ -1,12 +1,14 @@
 public class DetectObstacle {
+
+    String[][] floorMap = FloorPlan.getFloorPlan();
     public DetectObstacle () {}
 
-    public static int[] detectObs (int currentPositionX, int currentPositionY) {
+    public int[] detectObs (int currentPositionX, int currentPositionY) {
         int[] coor = new int[2];
         coor[0] = -1;
         coor[1] = -1;
 
-        // if (FloorNode.getObstacle() != 0)
+        int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&
