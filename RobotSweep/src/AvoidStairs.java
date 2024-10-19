@@ -5,7 +5,6 @@ public class AvoidStairs {
 
     public int[] avoidStairs (int currentPositionX, int currentPositionY) {
 
-        //int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
         int[] coor = new int[2];
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
