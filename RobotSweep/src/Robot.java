@@ -1,99 +1,145 @@
-public class RoomMap {
-    private String[][] roomMap;
-    private int size = 10;  // 10x10 map from FloorPlan
-    
-    public RoomMap() {
-        // Load the predefined floor plan from FloorPlan class
-        FloorPlan floorPlan = new FloorPlan();
-        this.roomMap = floorPlan.getFloorPlan();
+import java.util.Random;
+
+public class Robot {
+    private int x, y;
+    private RoomMap roomMap;
+
+    public Robot(RoomMap roomMap) {
+        this.roomMap = roomMap;
+        placeRobot();
     }
 
-    public String[][] getRoomMap() {
-        return roomMap;
+    // Places the robot in a random position without obstacles
+    private void placeRobot() {
+        Random rand = new Random();
+        int size = roomMap.getRoomMap().length;
+        do {
+            x = rand.nextInt(size);
+            y = rand.nextInt(size);
+        } while (roomMap.isObstacle(x, y));
+        System.out.println("Robot placed at: (" + x + ", " + y + ")");
     }
 
-    public boolean isObstacle(int x, int y) {
-        if (x < 0 || x >= size || y < 0 || y >= size) {
-            return true; // Out of bounds counts as obstacle
-        }
-        // Check the second character for obstacle (0 = nothing, 1 = furniture, 2 = charging station, 3 = stairs)
-        char obstacle = roomMap[x][y].charAt(1);
-        return obstacle != '0'; // If it's anything other than 0, it's considered an obstacle
-    }
+    // Move function to handle movement in different directions
+    public void move(String direction) {
+        int newX = x, newY = y;
 
-    // Check if there's a wall in the given direction (N, S, E, W)
-    public boolean hasWall(int x, int y, String direction) {
-        char wall;
-        switch (direction) {
+        switch (direction.toLowerCase()) {
             case "up":
-                wall = roomMap[x][y].charAt(2); // North wall (3rd character)
+                newX -= 1;
                 break;
             case "down":
-                wall = roomMap[x][y].charAt(3); // South wall (4th character)
+                newX += 1;
                 break;
             case "left":
-                wall = roomMap[x][y].charAt(5); // West wall (6th character)
+                newY -= 1;
                 break;
             case "right":
-                wall = roomMap[x][y].charAt(4); // East wall (5th character)
+                newY += 1;
                 break;
             default:
-                return false;
+                System.out.println("Invalid direction!");
+                return;
         }
-        return wall == '1'; // If "1", there's a wall in that direction
+
+        if (isValidMove(newX, newY, direction)) {
+            x = newX;
+            y = newY;
+            System.out.println("Moved " + direction + " to (" + x + ", " + y + ")");
+            reportTileInfo(x, y);  // Report both tile type and dirt level
+        } else {
+            System.out.println("Could not move " + direction + ". Staying at (" + x + ", " + y + ").");
+        }
     }
 
-    // Check if there's a closed door in the given direction (N, S, E, W)
-    public boolean hasClosedDoor(int x, int y, String direction) {
-        char door;
-        switch (direction) {
+    // Function to check if a move is valid and print all details (walls, doors, obstacles, etc.)
+    private boolean isValidMove(int newX, int newY, String direction) {
+        // Check if the new position is within bounds
+        if (newX < 0 || newX >= roomMap.getRoomMap().length || newY < 0 || newY >= roomMap.getRoomMap()[0].length) {
+            System.out.println("Cannot move " + direction + ": Out of bounds.");
+            return false;
+        }
+        
+        // Check if there's an obstacle (furniture, charging station, stairs)
+        if (roomMap.isObstacle(newX, newY)) {
+            String obstacleType = getObstacleType(newX, newY);
+            System.out.println("Cannot move " + direction + ": Obstacle encountered - " + obstacleType + ".");
+            return false;
+        }
+
+        // Check if there's a wall in the way
+        if (roomMap.hasWall(x, y, direction) || roomMap.hasWall(newX, newY, oppositeDirection(direction))) {
+            System.out.println("Cannot move " + direction + ": Wall blocking the path.");
+            return false;
+        }
+
+        // Check if there's a closed door in the way
+        if (roomMap.hasClosedDoor(x, y, direction) || roomMap.hasClosedDoor(newX, newY, oppositeDirection(direction))) {
+            System.out.println("Cannot move " + direction + ": Closed door blocking the path.");
+            return false;
+        }
+
+        // If no block, no door, no wall, no furniture, print the free path message
+        System.out.println("Move " + direction + " is clear. No obstacles, walls, or closed doors.");
+        return true;  // Valid move
+    }
+
+    // Get the type of obstacle encountered (furniture, charging station, stairs)
+    private String getObstacleType(int x, int y) {
+        char obstacle = roomMap.getRoomMap()[x][y].charAt(1);
+        switch (obstacle) {
+            case '1':
+                return "Furniture";
+            case '2':
+                return "Charging Station";
+            case '3':
+                return "Stairs";
+            default:
+                return "No obstacle";
+        }
+    }
+
+    // Get the opposite direction (to check walls and doors between tiles)
+    private String oppositeDirection(String direction) {
+        switch (direction.toLowerCase()) {
             case "up":
-                door = roomMap[x][y].charAt(6); // North door (7th character)
-                break;
+                return "down";
             case "down":
-                door = roomMap[x][y].charAt(7); // South door (8th character)
-                break;
+                return "up";
             case "left":
-                door = roomMap[x][y].charAt(9); // West door (10th character)
-                break;
+                return "right";
             case "right":
-                door = roomMap[x][y].charAt(8); // East door (9th character)
-                break;
+                return "left";
             default:
-                return false;
+                return "";
         }
-        return door == '2'; // If "2", the door is closed
     }
 
-    // Check if there's an open door in the given direction (N, S, E, W)
-    public boolean hasOpenDoor(int x, int y, String direction) {
-        char door;
-        switch (direction) {
-            case "up":
-                door = roomMap[x][y].charAt(6); // North door (7th character)
+    // Report both the tile type and dirt level at the robot's current position
+    private void reportTileInfo(int x, int y) {
+        char tileType = roomMap.getRoomMap()[x][y].charAt(0); // Tile type is the 1st character
+        char dirtLevel = roomMap.getRoomMap()[x][y].charAt(10); // Dirt is the 11th character
+
+        // Print tile type
+        switch (tileType) {
+            case '0':
+                System.out.println("Tile type: Bare floor.");
                 break;
-            case "down":
-                door = roomMap[x][y].charAt(7); // South door (8th character)
+            case '1':
+                System.out.println("Tile type: Low-pile carpet.");
                 break;
-            case "left":
-                door = roomMap[x][y].charAt(9); // West door (10th character)
-                break;
-            case "right":
-                door = roomMap[x][y].charAt(8); // East door (9th character)
+            case '2':
+                System.out.println("Tile type: High-pile carpet.");
                 break;
             default:
-                return false;
+                System.out.println("Tile type: Unknown.");
         }
-        return door == '1'; // If "1", the door is open
+
+        // Print dirt level
+        System.out.println("Dirt level at current position: " + dirtLevel + "/9");
     }
 
-    public void printRoomMap() {
-        System.out.println("Room Map:");
-        for (String[] row : roomMap) {
-            for (String cell : row) {
-                System.out.print(cell + " ");
-            }
-            System.out.println();
-        }
+    public void printPosition() {
+        System.out.println("Robot is currently at: (" + x + ", " + y + ")");
     }
 }
