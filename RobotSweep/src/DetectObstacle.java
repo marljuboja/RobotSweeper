@@ -6,6 +6,8 @@ public class DetectObstacle {
         coor[0] = -1;
         coor[1] = -1;
 
+        // if (FloorNode.getObstacle() != 0)
+
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&
                 ((FloorPlan.floorPlan[currentPositionX + 1][currentPositionY].substring(1, 2).equals("1"))
