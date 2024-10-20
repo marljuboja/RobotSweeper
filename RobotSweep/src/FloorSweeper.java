@@ -167,7 +167,7 @@ public class FloorSweeper {
         int toReturn = 0;
         switch (direction.toLowerCase()) {
             case "up":
-                if (currentPosition().getWall("north")){
+                if (currentPosition().getWall("north") || lookNorth().getObstacle() != 0){
                     System.out.println("Cannot move north from current position");
                 }
                 else{
@@ -177,7 +177,7 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "down":
-                if (currentPosition().getWall("south")){
+                if (currentPosition().getWall("south") || lookSouth().getObstacle() != 0){
                     System.out.println("Cannot move south from current position");
                 }
                 else{
@@ -187,7 +187,7 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "left":
-                if (currentPosition().getWall("west")){
+                if (currentPosition().getWall("west") || lookWest().getObstacle() != 0){
                     System.out.println("Cannot move west from current position");
                 }
                 else{
@@ -197,7 +197,7 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "right":
-                if (currentPosition().getWall("east")){
+                if (currentPosition().getWall("east") || lookEast().getObstacle() != 0){
                     System.out.println("Cannot move east from current position");
                 }
                 else{
