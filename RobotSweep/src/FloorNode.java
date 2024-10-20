@@ -9,7 +9,7 @@ public class FloorNode {
     private int posY;
 
     public FloorNode(String string, int x, int y){
-        int[] parsed = new int[10];
+        int[] parsed = new int[11];
         for(int i = 0; i < string.length();i++){
             parsed[i] = Integer.parseInt(string.substring(i,i+1));
         }
