@@ -165,9 +165,11 @@ public class FloorSweeper {
     //If no, stays in current position and returns 0
     public int checkAndMove(String direction) throws IllegalArgumentException{
         int toReturn = 0;
+        int obst;
         switch (direction.toLowerCase()) {
             case "up":
-                if (currentPosition().getWall("north") || lookNorth().getObstacle() != 0){
+                obst = lookNorth().getObstacle();
+                if (currentPosition().getWall("north") || obst%2 == 1 || currentPosition().getDoor("north") == 2){
                     System.out.println("Cannot move north from current position");
                 }
                 else{
@@ -177,7 +179,8 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "down":
-                if (currentPosition().getWall("south") || lookSouth().getObstacle() != 0){
+                obst = lookSouth().getObstacle();
+                if (currentPosition().getWall("south") || obst%2 == 1 || currentPosition().getDoor("south") == 2){
                     System.out.println("Cannot move south from current position");
                 }
                 else{
@@ -187,7 +190,8 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "left":
-                if (currentPosition().getWall("west") || lookWest().getObstacle() != 0){
+                obst = lookWest().getObstacle();
+                if (currentPosition().getWall("west") || obst%2 == 1 || currentPosition().getDoor("west") == 2){
                     System.out.println("Cannot move west from current position");
                 }
                 else{
@@ -197,7 +201,8 @@ public class FloorSweeper {
                 scanSurroundings();
                 return toReturn;
             case "right":
-                if (currentPosition().getWall("east") || lookEast().getObstacle() != 0){
+                obst = lookEast().getObstacle();
+                if (currentPosition().getWall("east") || obst%2 == 1 || currentPosition().getDoor("east") == 2){
                     System.out.println("Cannot move east from current position");
                 }
                 else{
