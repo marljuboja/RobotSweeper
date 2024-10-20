@@ -5,8 +5,10 @@ public class FloorNode {
     private int doorNorth, doorSouth, doorEast, doorWest;
     private int obstacle;
     private boolean chargingStation;
+    private int posX;
+    private int posY;
 
-    public FloorNode(String string){
+    public FloorNode(String string, int x, int y){
         int[] parsed = new int[11];
         for(int i = 0; i < string.length();i++){
             parsed[i] = Integer.parseInt(string.substring(i,i+1));
@@ -22,6 +24,18 @@ public class FloorNode {
         doorEast = parsed[8];
         doorWest = parsed[9];
         dirt = parsed[10];
+        posX = x;
+        posY = y;
+    }
+
+    //Returns X position on floormap
+    public int posX(){
+        return posX;
+    }
+
+    //Returns Y position on floormap
+    public int posY(){
+        return posY;
     }
 
     //Returns amount of dirt on tile
@@ -93,9 +107,15 @@ public class FloorNode {
     //Returns presence of obstacle on tile
     //0 = Nothing
     //1 = Furniture
-    //2 = 
+    //2 = Charging Station (passable)
     //3 = Stairs
     public int getObstacle(){
         return obstacle;
-    } 
+    }
+    
+    public boolean equals(FloorNode other){
+        if(posX == other.posX() && posY == other.posY())
+            return true;
+        return false;
+    }
 }
