@@ -61,6 +61,11 @@ public class FloorSweeper {
         lookWest();
     }
 
+    //Returns FloorNode at current position
+    public FloorNode currentPosition(){
+        return learnedFloorPlan[posX][posY];
+    }
+
     //Observes tile north of current position
     //Returns observations as FloorNode
     public FloorNode lookNorth(){
@@ -153,5 +158,56 @@ public class FloorSweeper {
             }
         }
         return closest;
+    }
+
+    //Checks direction of arg to see if movement possible
+    //If yes, moves 1 tile in that direction and returns 1
+    //If no, stays in current position and returns 0
+    public int checkAndMove(String direction) throws IllegalArgumentException{
+        int toReturn = 0;
+        switch (direction.toLowerCase()) {
+            case "up":
+                if (currentPosition().getWall("north")){
+                    System.out.println("Cannot move north from current position");
+                }
+                else{
+                    posY--;
+                    toReturn = 1;
+                }
+                scanSurroundings();
+                return toReturn;
+            case "down":
+                if (currentPosition().getWall("south")){
+                    System.out.println("Cannot move south from current position");
+                }
+                else{
+                    posY++;
+                    toReturn = 1;
+                }
+                scanSurroundings();
+                return toReturn;
+            case "left":
+                if (currentPosition().getWall("west")){
+                    System.out.println("Cannot move west from current position");
+                }
+                else{
+                    posX--;
+                    toReturn = 1;
+                }
+                scanSurroundings();
+                return toReturn;
+            case "right":
+                if (currentPosition().getWall("east")){
+                    System.out.println("Cannot move east from current position");
+                }
+                else{
+                    posX++;
+                    toReturn = 1;
+                }
+                scanSurroundings();
+                return toReturn;
+            default:
+                throw new IllegalArgumentException("" + direction + " is not a valid direction.");
+        }
     }
 }
