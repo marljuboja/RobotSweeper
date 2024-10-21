@@ -40,6 +40,7 @@ public class FloorSweeper {
         //Add starting tile to learned floormap
         learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY], posX, posY);
         returning = false;
+        scanSurroundings();
     }
 
     //Returns battery charge level of robot
@@ -52,6 +53,14 @@ public class FloorSweeper {
         return dirt;
     }
 
+    public FloorNode learnTile(int x, int y) throws IllegalArgumentException{
+        if (x < 0 || x >= assignedFloorPlan[0].length || y < 0 || y >= assignedFloorPlan.length){
+            throw new IllegalArgumentException("Argument(s) out of bounds for give floor map");
+        }
+        learnedFloorPlan[x][y] = new FloorNode(assignedFloorPlan[y][x], x, y);
+        return learnedFloorPlan[x][y];
+    }
+
     //Observes tiles in cardinal directions relative to current position
     //Useful for quickly mapping to memory after moving
     public void scanSurroundings(){
@@ -62,7 +71,7 @@ public class FloorSweeper {
     }
 
     //Returns FloorNode at current position
-    public FloorNode currentPosition(){
+    public FloorNode getCurrentTile(){
         return learnedFloorPlan[posX][posY];
     }
 
@@ -73,9 +82,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY-1], posX, posY-1);
-            learnedFloorPlan[posX][posY-1] = temp;
-            return temp;
+            return learnTile(posX, posY-1);
         }
     }
 
@@ -86,9 +93,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX+1][posY], posX+1, posY);
-            learnedFloorPlan[posX+1][posY] = temp;
-            return temp;
+            return learnTile(posX+1, posY);
         }
 
     }
@@ -100,9 +105,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX][posY+1], posX, posY+1);
-            learnedFloorPlan[posX][posY+1] = temp;
-            return temp;
+            return learnTile(posX, posY+1);
         }
     }
 
@@ -113,9 +116,7 @@ public class FloorSweeper {
             return null;
         }
         else{
-            FloorNode temp = new FloorNode(assignedFloorPlan[posX-1][posY], posX-1, posY);
-            learnedFloorPlan[posX-1][posY] = temp;
-            return temp;
+            return learnTile(posX-1, posY);
         }
     }
     
@@ -169,7 +170,7 @@ public class FloorSweeper {
         switch (direction.toLowerCase()) {
             case "up":
                 obst = lookNorth().getObstacle();
-                if (currentPosition().getWall("north") || obst%2 == 1 || currentPosition().getDoor("north") == 2){
+                if (getCurrentTile().getWall("north") || obst%2 == 1 || getCurrentTile().getDoor("north") == 2){
                     System.out.println("Cannot move north from current position");
                 }
                 else{
@@ -180,7 +181,7 @@ public class FloorSweeper {
                 return toReturn;
             case "down":
                 obst = lookSouth().getObstacle();
-                if (currentPosition().getWall("south") || obst%2 == 1 || currentPosition().getDoor("south") == 2){
+                if (getCurrentTile().getWall("south") || obst%2 == 1 || getCurrentTile().getDoor("south") == 2){
                     System.out.println("Cannot move south from current position");
                 }
                 else{
@@ -191,7 +192,7 @@ public class FloorSweeper {
                 return toReturn;
             case "left":
                 obst = lookWest().getObstacle();
-                if (currentPosition().getWall("west") || obst%2 == 1 || currentPosition().getDoor("west") == 2){
+                if (getCurrentTile().getWall("west") || obst%2 == 1 || getCurrentTile().getDoor("west") == 2){
                     System.out.println("Cannot move west from current position");
                 }
                 else{
@@ -202,7 +203,7 @@ public class FloorSweeper {
                 return toReturn;
             case "right":
                 obst = lookEast().getObstacle();
-                if (currentPosition().getWall("east") || obst%2 == 1 || currentPosition().getDoor("east") == 2){
+                if (getCurrentTile().getWall("east") || obst%2 == 1 || getCurrentTile().getDoor("east") == 2){
                     System.out.println("Cannot move east from current position");
                 }
                 else{
@@ -213,6 +214,18 @@ public class FloorSweeper {
                 return toReturn;
             default:
                 throw new IllegalArgumentException("" + direction + " is not a valid direction.");
+        }
+    }
+
+    public void printLearnedMap(){
+        for(int y = 0; y < learnedFloorPlan.length; y++){
+            for (int x = 0; x < learnedFloorPlan[y].length; x++){
+                if (learnedFloorPlan[x][y] == null)
+                    System.out.print("X / X; ");
+                else
+                    System.out.print(learnedFloorPlan[x][y].toString());
+            }
+            System.out.println();
         }
     }
 }

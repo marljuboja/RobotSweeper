@@ -118,4 +118,18 @@ public class FloorNode {
             return true;
         return false;
     }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        if (getObstacle() != 0){
+            if (getObstacle() == 1) str.append("F / F");
+            else if (getObstacle() == 2) str.append("C / C");
+            else if (getObstacle() == 3) str.append("S / S");
+        }
+        else{
+            str.append(getDirt() + " / " + getFloorType());
+        }
+        str.append("; ");
+        return str.toString();
+    }
 }
