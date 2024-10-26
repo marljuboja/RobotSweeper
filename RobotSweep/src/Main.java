@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
         FloorPlan.getFloorPlan();
@@ -8,5 +10,18 @@ public class Main {
             }
             System.out.println();
         }
+
+        int[] arr;
+
+        //arr = DetectChargeStation.detectCS(8,3);
+
+        //arr = DetectStairs.detectStair(8,3);
+
+        //System.out.println(arr[0] + ", " + arr[1]);
+
+        /*ArrayList<int[]> list = DetectObstacle.detectObs(2,4);
+        for (int[] a : list) {
+            System.out.println(a[0] + ", " + a[1]);
+        }*/
     }
 }
