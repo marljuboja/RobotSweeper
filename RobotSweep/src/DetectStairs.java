@@ -1,6 +1,7 @@
 public class DetectStairs {
 
     static String[][] floorMap = FloorPlan.getFloorPlan();
+    public final static int maxIndex = 10;
     public DetectStairs() {}
 
     public static int[] detectStair (int currentPositionX, int currentPositionY) {
@@ -10,6 +11,10 @@ public class DetectStairs {
         coor[1] = -1;
 
         int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
+
+        if ((currentPositionX == -1) || (currentPositionY == -1) || (currentPositionX >= maxIndex) || (currentPositionY >= maxIndex)) {
+            throw new IllegalArgumentException("Cannot use coordinate out of index bounds for detecting stairs");
+        }
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&

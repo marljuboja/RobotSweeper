@@ -1,5 +1,5 @@
 public class DetectChargeStation {
-    public final int maxIndex = 10;
+    public final static int maxIndex = 10;
     public static String[][] floorMap = FloorPlan.getFloorPlan();
     public DetectChargeStation () {}
 
@@ -9,6 +9,11 @@ public class DetectChargeStation {
         coor[1] = -1;
 
         int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
+
+        if ((currentPositionX == -1) || (currentPositionY == -1) || (currentPositionX >= maxIndex) || (currentPositionY >= maxIndex)) {
+            throw new IllegalArgumentException("Cannot use coordinate out of index bounds for detecting charge station");
+        }
+
 
             if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                     (currentPositionY > -1) &&

@@ -5,11 +5,16 @@ public class DetectObstacle {
 
     static String[][] floorMap = FloorPlan.getFloorPlan();
     static ArrayList<int[]> list = new ArrayList<>();
+    public final static int maxIndex = 10;
     public DetectObstacle () {}
 
     public static ArrayList<int[]> detectObs (int currentPositionX, int currentPositionY) {
 
         int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
+
+        if ((currentPositionX == -1) || (currentPositionY == -1) || (currentPositionX >= maxIndex) || (currentPositionY >= maxIndex)) {
+            throw new IllegalArgumentException("Cannot use coordinate out of index bounds for detecting obstacle");
+        }
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&
