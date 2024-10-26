@@ -1,11 +1,15 @@
-public class AvoidStairs {
+public class DetectStairs {
 
-    String[][] floorMap = FloorPlan.getFloorPlan();
-    public AvoidStairs () {}
+    static String[][] floorMap = FloorPlan.getFloorPlan();
+    public DetectStairs() {}
 
-    public int[] avoidStairs (int currentPositionX, int currentPositionY) {
+    public static int[] detectStair (int currentPositionX, int currentPositionY) {
 
         int[] coor = new int[2];
+        coor[0] = -1;
+        coor[1] = -1;
+
+        int obs = new FloorNode(floorMap[currentPositionX][currentPositionY]).getObstacle();
 
         if (((currentPositionX + 1) < 10) && (currentPositionY < 10) && ((currentPositionX + 1) > -1) &&
                 (currentPositionY > -1) &&
