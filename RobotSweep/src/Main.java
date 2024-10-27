@@ -13,11 +13,11 @@ public class Main {
 
         int[] arr;
 
-        arr = DetectChargeStation.detectCS(9,3);
+        //arr = DetectChargeStation.detectCS(9,3);
 
         //arr = DetectStairs.detectStair(9,3);
 
-        System.out.println(arr[0] + ", " + arr[1]);
+        //System.out.println(arr[0] + ", " + arr[1]);
 
         /*ArrayList<int[]> list = DetectObstacle.detectObs(2,4);
         for (int[] a : list) {
