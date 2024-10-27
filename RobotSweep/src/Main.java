@@ -13,9 +13,9 @@ public class Main {
 
         int[] arr;
 
-        //arr = DetectChargeStation.detectCS(8,3);
+        //arr = DetectChargeStation.detectCS(9,3);
 
-        //arr = DetectStairs.detectStair(8,3);
+        //arr = DetectStairs.detectStair(9,3);
 
         //System.out.println(arr[0] + ", " + arr[1]);
 
