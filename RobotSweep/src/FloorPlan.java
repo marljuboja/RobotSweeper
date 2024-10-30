@@ -4,10 +4,11 @@ import java.util.Objects;
 import java.util.*;
 
 public class FloorPlan {
+    public final static int maxIndex = 10;
 
     //Please keep in mind this is the layout of the room not what the robot has already seen
     //and taken note of
-    static String[][] floorPlan = new String[10][10];;
+    static String[][] floorPlan = new String[maxIndex][maxIndex];;
 
     public FloorPlan() {
     }
@@ -20,8 +21,11 @@ public class FloorPlan {
     //seventh, eighth, ninth, tenth; is door position, N,S,E,W with 0 -no door, 1- open door, 2- closed door
     //eleventh is amount of dirt with 0- no dirt; (0-9)
 
-    //creating floor plan
-
+    /**
+     * Gets the floor plan
+     * @author Marina Ljuboja
+     * @return 2-d string array with eleven-digit numbers representing floor
+     */
     public static String[][] getFloorPlan() {
         floorPlan[0][0] = "00100100000";
         floorPlan[0][1] = "00101000000";
