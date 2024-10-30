@@ -8,6 +8,11 @@ public class DetectObstacle {
     public final static int maxIndex = 10;
     public DetectObstacle () {}
 
+    /**
+     * Looks for obstacles within one tile away from current position
+     * @param currentPositionX,currentPositionY the coordinates to the current position
+     * @return array list of integer arrays with x and y coordinates of places with obstacles
+     */
     public static ArrayList<int[]> detectObs (int currentPositionX, int currentPositionY) {
 
         int obs = new FloorNode(floorMap[currentPositionX][currentPositionY],currentPositionX,currentPositionY).getObstacle();

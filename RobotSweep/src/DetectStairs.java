@@ -4,6 +4,11 @@ public class DetectStairs {
 
     public DetectStairs() {}
 
+    /**
+     * Looks for stairs within one tile away from current position
+     * @param currentPositionX,currentPositionY the coordinates to the current position
+     * @return integer array with x and y coordinates of place with stairs
+     */
     public static int[] detectStair (int currentPositionX, int currentPositionY) {
 
         int[] coor = new int[2];

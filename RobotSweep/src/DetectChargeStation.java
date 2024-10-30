@@ -3,6 +3,11 @@ public class DetectChargeStation {
     public static String[][] floorMap = FloorPlan.getFloorPlan();
     public DetectChargeStation () {}
 
+    /**
+     * Looks for charging station within two tiles away from current position
+     * @param currentPositionX,currentPositionY the coordinates to the current position
+     * @return integer array with x and y coordinates of place with charging station
+     */
     public static int[] detectCS(int currentPositionX, int currentPositionY) {
         int[] coor = new int[2];
         coor[0] = -1;
