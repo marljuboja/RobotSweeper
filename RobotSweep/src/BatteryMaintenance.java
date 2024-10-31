@@ -8,4 +8,5 @@ public class BatteryMaintenance {
     //After recharging at the charging station, it resumes cleaning.
 
     public BatteryMaintenance () {}
+    
 }
