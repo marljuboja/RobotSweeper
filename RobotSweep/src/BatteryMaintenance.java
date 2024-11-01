@@ -19,8 +19,15 @@ public class BatteryMaintenance {
         }
     }
 
-    public void goesToCS() {}
+    public void goesToCS() {
+        if (isEnoughBattery() == false) {
+            currentBatteryLevel = 250;
+            isDoneCharging();
+        }
+    }
 
-    public void isDoneCharging () {}
+    public void isDoneCharging () {
+        //TODO resumes movement and cleaning
+    }
 
 }
