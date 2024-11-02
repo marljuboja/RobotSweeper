@@ -72,7 +72,9 @@ public class BatteryMaintenance {
      * @return boolean
      */
     public void isAtCS() {
+
         currentBatteryLevel = 250.0;
+        flag = -1;
     }
 
 
