@@ -18,7 +18,7 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public boolean startBatteryMaintenance (int[] start, int[] dest) {
+    public static boolean startBatteryMaintenance (int[] start, int[] dest) {
         int typeStart = new FloorNode(floorMap[start[0]][start[1]],start[0],start[1]).getFloorType();
         int typeDest = new FloorNode(floorMap[dest[0]][dest[1]],dest[0],dest[1]).getFloorType();
         double cleanPower = 0.0;
@@ -43,7 +43,7 @@ public class BatteryMaintenance {
         else {
             flag = 0;
             ////////// needs to be recharged once at station
-            isAtCS();
+            //isAtCS();
             return false;
         }
 
@@ -55,7 +55,7 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public boolean isEnoughBattery (double totalPower) {
+    public static boolean isEnoughBattery (double totalPower) {
         double power = currentBatteryLevel - totalPower;
 
         if (power >= 50) {
@@ -71,8 +71,7 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public void isAtCS() {
-
+    public static void isAtCS() {
         currentBatteryLevel = 250.0;
         flag = -1;
     }
