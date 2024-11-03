@@ -3,6 +3,7 @@ public class BatteryMaintenance {
     public static final int maxBattery = 50;
     public static double currentBatteryLevel = 250.0;
     static String[][] floorMap = FloorPlan.getFloorPlan();
+    // if flag is -1 then robot is cleaning, if 0 then it is only moving
     static int flag = -1;
     public BatteryMaintenance () {}
 
@@ -11,12 +12,16 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public static boolean startBatteryMaintenance (int[] start, int[] dest) {
+    public static boolean startBatteryMaintenance (int[] start, int[] dest, boolean isDirtFull) {
         int typeStart = new FloorNode(floorMap[start[0]][start[1]],start[0],start[1]).getFloorType();
         int typeDest = new FloorNode(floorMap[dest[0]][dest[1]],dest[0],dest[1]).getFloorType();
         double cleanPower = 0.0;
 
         double movePower = MovementPowerCalculator.calculateMovementPower(typeStart, typeDest);
+
+        if (isDirtFull == true) {
+            flag = 0;
+        }
 
         if (flag == -1) {
             cleanPower = MovementPowerCalculator.getPowerRequirement(typeDest);
