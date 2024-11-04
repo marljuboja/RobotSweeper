@@ -1,6 +1,6 @@
 public class BatteryMaintenance {
     
-    public static final int maxBattery = 50;
+    public static final int minBattery = 50;
     public static double currentBatteryLevel = 250.0;
     static String[][] floorMap = FloorPlan.getFloorPlan();
     // if flag is -1 then robot is cleaning, if 0 then it is only moving
@@ -56,7 +56,7 @@ public class BatteryMaintenance {
     public static boolean isEnoughBattery (double totalPower) {
         double power = currentBatteryLevel - totalPower;
 
-        if (power >= 50) {
+        if (power > minBattery) {
             return true;
         }
         else {

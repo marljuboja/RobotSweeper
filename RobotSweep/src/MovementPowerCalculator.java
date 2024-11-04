@@ -24,7 +24,7 @@ public class MovementPowerCalculator{
      * @param tileType surface type (0: bare floor, 1: low-pile carpet, 2: high-pile carpet)
      * @return power units required for that surface
      */
-    private static double getPowerRequirement(int tileType) {
+    public static double getPowerRequirement(int tileType) {
         switch (tileType) {
             case 0: return BARE_FLOOR_POWER;  // Bare floor
             case 1: return LOW_PILE_POWER;    // Low-pile carpet
