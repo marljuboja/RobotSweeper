@@ -206,61 +206,76 @@ public class FloorSweeper {
         return closest;
     }
 
+    /**
+     * Moves along outermost boundaries of floorplan, cleaning along the way, starting from NW corner (0,0).
+     * After making one round trip, calls cleanRemainder()
+     * @return 1 if successful
+     */
     public int beginSweep(){
-        int stage = 0;
         int toReturn = 0;
-        String direction = "";
+        boolean flip = false;
         // Move to northwest corner
-        while (stage == 0){
-            while (posX != 0){
-                if (checkAndMove("west") == 0){
-                    if (checkAndMove("north") == 0){
-                        checkAndMove("south");
-                    }
-                }
-                cleanTile();
-            }
-            while (posY != 0){
-                if (checkAndMove("north") == 0){
-                    if (checkAndMove("west") == 0){
-                        checkAndMove("east");
-                    }
+        while (posX != 0){
+            while(checkAndMove("west") == 0){
+                if (flip){ checkAndMove("south"); }
+                else{
+                    if (checkAndMove("north") == 0){ flip = true; }
                 }
             }
+            flip = false;
+            cleanTile();
+        }
+        while (posY != 0){
+            while(checkAndMove("north") == 0){
+                if (flip){ checkAndMove("east"); }
+                else{
+                    if (checkAndMove("west") == 0){ flip = true; }
+                }
+            }
+            flip = false;
         }
         // Move to NE
         while (posX != 9){
-            if (checkAndMove("east") == 0){
-                if (checkAndMove("north") == 0){
-                    checkAndMove("south");
+            while(checkAndMove("east") == 0){
+                if (flip){ checkAndMove("north"); }
+                else{
+                    if (checkAndMove("south") == 0){ flip = true; }
                 }
             }
+            flip = false;
         }
         // Move to SE
         while (posY != 9){
-            if (checkAndMove("south") == 0){
-                if (checkAndMove("east") == 0){
-                    checkAndMove("west");
+            while(checkAndMove("south") == 0){
+                if (flip){ checkAndMove("east"); }
+                else{
+                    if (checkAndMove("west") == 0){ flip = true; }
                 }
             }
+            flip = false;
         }
         // Move to SW
         while (posX != 0){
-            if (checkAndMove("west") == 0){
-                if (checkAndMove("south") == 0){
-                    checkAndMove("north");
+            while(checkAndMove("west") == 0){
+                if (flip){ checkAndMove("south"); }
+                else{
+                    if (checkAndMove("north") == 0){ flip = true; }
                 }
             }
+            flip = false;
         }
         // Move to NW
         while (posY != 0){
-            if (checkAndMove("north") == 0){
-                if (checkAndMove("west") == 0){
-                    checkAndMove("east");
+            while(checkAndMove("north") == 0){
+                if (flip){ checkAndMove("west"); }
+                else{
+                    if (checkAndMove("east") == 0){ flip = true; }
                 }
             }
+            flip = false;
         }
         cleanRemainder();
+        return 1;
     }
 
     /**
@@ -289,6 +304,11 @@ public class FloorSweeper {
         return 1;
     }
 
+    /**
+     * Moves to a passed FloorNode.
+     * @param destination FloorNode to move to
+     * @return 1 if move is successful
+     */
     private int moveTo(FloorNode destination){
         boolean flip = false;
         while (!getCurrentTile().equals(destination)){
@@ -359,7 +379,7 @@ public class FloorSweeper {
                 else{
                     posY--;
                     depleteChargeMovement(lookNorth().getFloorType());
-                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
                     scanSurroundings();
                     return 1;
                 }
@@ -377,7 +397,7 @@ public class FloorSweeper {
                 else{
                     posY++;
                     depleteChargeMovement(lookSouth().getFloorType());
-                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
                     scanSurroundings();
                     return 1;
                 }
@@ -395,7 +415,7 @@ public class FloorSweeper {
                 else{
                     posX--;
                     depleteChargeMovement(lookWest().getFloorType());
-                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
                     scanSurroundings();
                     return 1;
                 }
@@ -413,7 +433,7 @@ public class FloorSweeper {
                 else{
                     posX++;
                     depleteChargeMovement(lookEast().getFloorType());
-                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
                     scanSurroundings();
                     return 1;
                 }
