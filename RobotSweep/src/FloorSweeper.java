@@ -19,7 +19,9 @@ public class FloorSweeper {
     private DirtContainer dirt;
 
     //Threshold at which Robot will be forced to return to charging station
-    private final double MIN_ALLOWED_CHARGE = 15;
+    private final double MIN_ALLOWED_CHARGE = 25;
+    //Maximum battery charge
+    private final double MAX_ALLOWED_CHARGE = 250;
 
     //Robot's x and y positions, respectively
     private int posX;
@@ -36,7 +38,7 @@ public class FloorSweeper {
     public FloorSweeper(String[][] floorplan){
         learnedFloorPlan = new FloorNode[10][10];
         assignedFloorPlan = floorplan;
-        charge = 100;
+        charge = MAX_ALLOWED_CHARGE;
         //Add starting tile to learned floormap
         learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY], posX, posY);
         returning = false;
@@ -52,7 +54,7 @@ public class FloorSweeper {
     public FloorSweeper(String[][] floorplan, int x, int y){
         learnedFloorPlan = new FloorNode[10][10];
         assignedFloorPlan = floorplan;
-        charge = 100;
+        charge = MAX_ALLOWED_CHARGE;
         posX = x;
         posY = y;
         //Add starting tile to learned floormap
@@ -84,13 +86,18 @@ public class FloorSweeper {
         lookWest();
     }
 
-    //Returns FloorNode at current position
+    /**
+     * 
+     * @return FloorNode at current Position
+     */
     public FloorNode getCurrentTile(){
         return learnedFloorPlan[posX][posY];
     }
 
-    //Observes tile north of current position and adds to learned floor map
-    //Returns observations as FloorNode
+    /**
+     * 
+     * @return FloorNode directly north of current location
+     */
     public FloorNode lookNorth(){
         if (posY <= 0){
             return null;
@@ -100,8 +107,10 @@ public class FloorSweeper {
         }
     }
 
-    //Observes tile east of current position and adds to learned floor map
-    //Returns observations as FloorNode
+    /**
+     * 
+     * @return FloorNode directly east of current location
+     */
     public FloorNode lookEast(){
         if (posX >= 9){
             return null;
@@ -112,8 +121,10 @@ public class FloorSweeper {
 
     }
 
-    //Observes tile south of current position and adds to learned floor map
-    //Returns observations as FloorNode
+    /**
+     * 
+     * @return FloorNode directly south of current location
+     */
     public FloorNode lookSouth(){
         if (posY >= 9){
             return null;
@@ -123,8 +134,10 @@ public class FloorSweeper {
         }
     }
 
-    //Observes tile west of current position and adds to learned floor map
-    //Returns observations as FloorNode
+    /**
+     * 
+     * @return FloorNode directly west of current location
+     */
     public FloorNode lookWest(){
         if (posX <= 0){
             return null;
@@ -134,7 +147,9 @@ public class FloorSweeper {
         }
     }
     
-    //Will work as long as charge is available, ideally change so that cleaning stops before not enough charge left to return to CS
+    /**
+     * Cleans current tile
+     */
     public void cleanTile(){
         FloorNode currentTile = learnedFloorPlan[posX][posY];
         while(!returning && currentTile.getDirt() > 0){
@@ -152,15 +167,25 @@ public class FloorSweeper {
         }
     }
 
+    /**
+     * Begins algorithm to locate nearest charging station and return to it.
+     * Recharges battery once charging station is reached.
+     * Once recharged, moves back to where it left off.
+     */
     public void returnToStation(){
+        FloorNode lastVisited = getCurrentTile();
         FloorNode closestStation = getClosestChargingStation();
-        while(posX != closestStation.posX() && posY != closestStation.posY()){
-            //TODO
-            //Requires movement functions to be implemented
+        if (moveTo(closestStation) == 1){
+            charge = MAX_ALLOWED_CHARGE;
         }
-
+        moveTo(lastVisited);
     }
 
+    /**
+     * Getter function for charging station fewest spaces away from current location.
+     * Does not factor for walls, obstacles, etc.
+     * @return FloorNode containing closest charging station
+     */
     private FloorNode getClosestChargingStation(){
         ArrayList<FloorNode> foundStations = new ArrayList<FloorNode>();
         for(int x = 0; x < learnedFloorPlan.length; x++){
@@ -181,9 +206,142 @@ public class FloorSweeper {
         return closest;
     }
 
-    //Checks direction of arg to see if movement possible
-    //If yes, moves 1 tile in that direction and returns 1
-    //If no, stays in current position and returns 0
+    public int beginSweep(){
+        int stage = 0;
+        int toReturn = 0;
+        String direction = "";
+        // Move to northwest corner
+        while (stage == 0){
+            while (posX != 0){
+                if (checkAndMove("west") == 0){
+                    if (checkAndMove("north") == 0){
+                        checkAndMove("south");
+                    }
+                }
+                cleanTile();
+            }
+            while (posY != 0){
+                if (checkAndMove("north") == 0){
+                    if (checkAndMove("west") == 0){
+                        checkAndMove("east");
+                    }
+                }
+            }
+        }
+        // Move to NE
+        while (posX != 9){
+            if (checkAndMove("east") == 0){
+                if (checkAndMove("north") == 0){
+                    checkAndMove("south");
+                }
+            }
+        }
+        // Move to SE
+        while (posY != 9){
+            if (checkAndMove("south") == 0){
+                if (checkAndMove("east") == 0){
+                    checkAndMove("west");
+                }
+            }
+        }
+        // Move to SW
+        while (posX != 0){
+            if (checkAndMove("west") == 0){
+                if (checkAndMove("south") == 0){
+                    checkAndMove("north");
+                }
+            }
+        }
+        // Move to NW
+        while (posY != 0){
+            if (checkAndMove("north") == 0){
+                if (checkAndMove("west") == 0){
+                    checkAndMove("east");
+                }
+            }
+        }
+        cleanRemainder();
+    }
+
+    /**
+     * Scans learned memory for remaining FloorNodes with dirt,
+     * moves to its position and cleans it.
+     * @return 1 when all known tiles are clean.
+     */
+    private int cleanRemainder(){
+        boolean jobDone = false;
+        FloorNode unclean = getCurrentTile();
+        while (!jobDone){
+            jobDone = true;
+            for (int x = 0; x < 9; x++){
+                for (int y = 0; y < 9; y++){
+                    if (learnedFloorPlan[x][y].getDirt() > 0){
+                        if ((unclean.posX() + unclean.posY()) > (learnedFloorPlan[x][y].posX() + learnedFloorPlan[x][y].posY())){
+                            unclean = learnedFloorPlan[x][y];
+                        };
+                        jobDone = false;
+                        moveTo(unclean);
+                        cleanTile();
+                    }
+                }
+            }
+        }
+        return 1;
+    }
+
+    private int moveTo(FloorNode destination){
+        boolean flip = false;
+        while (!getCurrentTile().equals(destination)){
+            // Move east
+            if (getCurrentTile().posX() < destination.posX()){
+                while(checkAndMove("east") == 0){
+                    if (flip){ checkAndMove("south"); }
+                    else{
+                        if (checkAndMove("north") == 0){ flip = true; }
+                    }
+                }
+                flip = false;
+            }
+            // Move west
+            else if (getCurrentTile().posX() > destination.posX()){
+                while(checkAndMove("west") == 0){
+                    if (flip){ checkAndMove("south"); }
+                    else{
+                        if (checkAndMove("north") == 0){ flip = true; }
+                    }
+                }
+                flip = false;
+            }
+            // Move south
+            if (getCurrentTile().posY() < destination.posY()){
+                while(checkAndMove("south") == 0){
+                    if (flip){ checkAndMove("west"); }
+                    else{
+                        if (checkAndMove("east") == 0){ flip = true; }
+                    }
+                }
+                flip = false;
+            }
+            // Move north
+            else if (getCurrentTile().posY() > destination.posY()){
+                while(checkAndMove("north") == 0){
+                    if (flip){ checkAndMove("west"); }
+                    else{
+                        if (checkAndMove("east") == 0){ flip = true; }
+                    }
+                }
+                flip = false;
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * Checks direction of arg to see if movement possible
+     * @param direction "north"/"south"/"east"/"west"
+     * @return 1 on successful move, 0 on unsuccessful move
+     * @throws IllegalArgumentException
+     */
     public int checkAndMove(String direction) throws IllegalArgumentException{
         int obst;
         switch (direction.toLowerCase()) {
@@ -201,6 +359,8 @@ public class FloorSweeper {
                 else{
                     posY--;
                     depleteChargeMovement(lookNorth().getFloorType());
+                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    scanSurroundings();
                     return 1;
                 }
             // Move South
@@ -217,6 +377,8 @@ public class FloorSweeper {
                 else{
                     posY++;
                     depleteChargeMovement(lookSouth().getFloorType());
+                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    scanSurroundings();
                     return 1;
                 }
             // Move West
@@ -233,6 +395,8 @@ public class FloorSweeper {
                 else{
                     posX--;
                     depleteChargeMovement(lookWest().getFloorType());
+                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    scanSurroundings();
                     return 1;
                 }
             // Move East
@@ -249,6 +413,8 @@ public class FloorSweeper {
                 else{
                     posX++;
                     depleteChargeMovement(lookEast().getFloorType());
+                    if (getCurrentTile().getDirt() > 0){ cleanTile(); }
+                    scanSurroundings();
                     return 1;
                 }
             // Move Weast
@@ -260,7 +426,6 @@ public class FloorSweeper {
     // Depletes charge based on terrain traversed
     private void depleteChargeMovement(int destFloorType){
         charge = charge - MovementPowerCalculator.calculateMovementPower(getCurrentTile().getFloorType(), destFloorType);
-        scanSurroundings();
         updateLevels();
     }
 

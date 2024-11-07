@@ -9,6 +9,12 @@ public class FloorNode {
     private int posY;
 
 
+    /**
+     * Construct a FloorNode
+     * @param string 11-digit code used to generate floor node
+     * @param x X-position of floor node
+     * @param y Y-position of floor node
+     */
     public FloorNode(String string, int x, int y){
 
         int[] parsed = new int[11];
