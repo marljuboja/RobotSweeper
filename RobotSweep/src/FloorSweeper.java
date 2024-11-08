@@ -168,6 +168,10 @@ public class FloorSweeper {
 
     // Run this method after changing dirt/battery to check if returning thresholds are met
     private void updateLevels(){
+        if (charge <= 0) {
+            System.out.println("Sweeper has run out of battery and has shut down.");
+            java.lang.System.exit(0);
+        }
         if ((dirt.isFull() || charge < MIN_ALLOWED_CHARGE) && returning == false){
             returning = true;
             returnToStation();
