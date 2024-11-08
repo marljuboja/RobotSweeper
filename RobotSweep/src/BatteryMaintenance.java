@@ -17,7 +17,8 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public static void startBatteryMaintenance (int startX, int startY, int destX, int destY, boolean isDirtFull) {
+    public static void startBatteryMaintenance (int startX, int startY, int destX, int destY, boolean isDirtFull,
+                                                boolean isCleanRemainder) {
         FloorNode flr = new FloorNode(floorMap[startY][startX],startX,startY);
         int typeStart = flr.getFloorType();
         int typeDest = new FloorNode(floorMap[destY][destX],destX,destY).getFloorType();
@@ -45,8 +46,12 @@ public class BatteryMaintenance {
             flag = 0;
         }
 
-        if (flag == -1) {
-            cleanPower = MovementPowerCalculator.getPowerRequirement(typeDest);
+        if(isCleanRemainder == true) {
+            movePower = 0;
+        }
+
+        if ((flag == -1) || (isCleanRemainder == true)) {
+            cleanPower = MovementPowerCalculator.calculateMovementPower(typeStart, typeDest);
         }
 
         double totalPower = movePower + cleanPower;
@@ -61,9 +66,11 @@ public class BatteryMaintenance {
         else {
             flag = 0;
             ////////// needs to be recharged once at station
-            floorS.returnToStation();
-            isAtCS();
+            //floorS.returnToStation();
+            //isAtCS();
         }
+
+
 
     }
 
