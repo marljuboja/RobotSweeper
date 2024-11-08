@@ -30,6 +30,8 @@ public class FloorSweeper {
     //True if returning to charging station, false if cleaning
     private boolean returning;
 
+    private boolean isCleaning;
+
     //Constructor for robot
     /**Initialize robot at 0/0
      * @deprecated use FloorSweeper(String[][] floorplan, int x, int y)
@@ -40,7 +42,7 @@ public class FloorSweeper {
         assignedFloorPlan = floorplan;
         charge = MAX_ALLOWED_CHARGE;
         //Add starting tile to learned floormap
-        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY], posX, posY);
+        learnedFloorPlan[posY][posX] = new FloorNode(assignedFloorPlan[posY][posX], posX, posY);
         returning = false;
         dirt = new DirtContainer();
         scanSurroundings();
@@ -52,13 +54,14 @@ public class FloorSweeper {
      * @param y Y-coordinate to start at
      */
     public FloorSweeper(String[][] floorplan, int x, int y){
+        isCleaning = true;
         learnedFloorPlan = new FloorNode[10][10];
         assignedFloorPlan = floorplan;
         charge = MAX_ALLOWED_CHARGE;
         posX = x;
         posY = y;
         //Add starting tile to learned floormap
-        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posX][posY], posX, posY);
+        learnedFloorPlan[posX][posY] = new FloorNode(assignedFloorPlan[posY][posX], posX, posY);
         returning = false;
         dirt = new DirtContainer();
         scanSurroundings();
@@ -73,7 +76,9 @@ public class FloorSweeper {
         if (x < 0 || x >= assignedFloorPlan[0].length || y < 0 || y >= assignedFloorPlan.length){
             throw new IllegalArgumentException("Argument(s) out of bounds for give floor map");
         }
-        learnedFloorPlan[x][y] = new FloorNode(assignedFloorPlan[y][x], x, y);
+        if (learnedFloorPlan[x][y] == null){
+            learnedFloorPlan[x][y] = new FloorNode(assignedFloorPlan[y][x], x, y);
+        }
         return learnedFloorPlan[x][y];
     }
 
@@ -151,19 +156,21 @@ public class FloorSweeper {
      * Cleans current tile
      */
     public void cleanTile(){
-        FloorNode currentTile = learnedFloorPlan[posX][posY];
+        FloorNode currentTile = getCurrentTile();
         while(!returning && currentTile.getDirt() > 0){
             currentTile.cleanDirt();
             dirt.addDirt();
             charge = charge-(currentTile.getFloorType()+1);
+            learnedFloorPlan[posX][posY] = currentTile; 
             updateLevels();
         }
     }
 
     // Run this method after changing dirt/battery to check if returning thresholds are met
     private void updateLevels(){
-        if (dirt.isFull() || charge < MIN_ALLOWED_CHARGE){
+        if ((dirt.isFull() || charge < MIN_ALLOWED_CHARGE) && returning == false){
             returning = true;
+            returnToStation();
         }
     }
 
@@ -173,12 +180,31 @@ public class FloorSweeper {
      * Once recharged, moves back to where it left off.
      */
     public void returnToStation(){
-        FloorNode lastVisited = getCurrentTile();
+        returning = true;
         FloorNode closestStation = getClosestChargingStation();
         if (moveTo(closestStation) == 1){
             charge = MAX_ALLOWED_CHARGE;
+            if (dirt.isFull()){
+                dirt.emptyContainer();
+            }
+            returning = false;
         }
-        moveTo(lastVisited);
+        isCleaning = dirtExists();
+        if(isCleaning){ beginSweep(); }
+        else{
+            System.out.println("Sweep complete. All known tiles are clean");
+            java.lang.System.exit(0);
+        }
+    }
+
+    private boolean dirtExists(){
+        for (int i = 0; i <= 9; i++){
+            for (int j = 0; j <= 9; j++){
+                if (learnedFloorPlan[i][j] != null && learnedFloorPlan[i][j].getDirt() > 0)
+                    return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -212,7 +238,6 @@ public class FloorSweeper {
      * @return 1 if successful
      */
     public int beginSweep(){
-        int toReturn = 0;
         boolean flip = false;
         // Move to northwest corner
         while (posX != 0){
@@ -275,6 +300,8 @@ public class FloorSweeper {
             flip = false;
         }
         cleanRemainder();
+        System.out.println("Sweep complete, returning to charging station");
+        returnToStation();
         return 1;
     }
 
@@ -288,10 +315,10 @@ public class FloorSweeper {
         FloorNode unclean = getCurrentTile();
         while (!jobDone){
             jobDone = true;
-            for (int x = 0; x < 9; x++){
-                for (int y = 0; y < 9; y++){
-                    if (learnedFloorPlan[x][y].getDirt() > 0){
-                        if ((unclean.posX() + unclean.posY()) > (learnedFloorPlan[x][y].posX() + learnedFloorPlan[x][y].posY())){
+            for (int x = 0; x <= 9; x++){
+                for (int y = 0; y <= 9; y++){
+                    if (learnedFloorPlan[x][y] != null && learnedFloorPlan[x][y].getDirt() > 0){
+                        if ((unclean.equals(getCurrentTile())) || (unclean.posX() + unclean.posY()) > (learnedFloorPlan[x][y].posX() + learnedFloorPlan[x][y].posY())){
                             unclean = learnedFloorPlan[x][y];
                         };
                         jobDone = false;
@@ -325,9 +352,9 @@ public class FloorSweeper {
             // Move west
             else if (getCurrentTile().posX() > destination.posX()){
                 while(checkAndMove("west") == 0){
-                    if (flip){ checkAndMove("south"); }
+                    if (flip){ checkAndMove("north"); }
                     else{
-                        if (checkAndMove("north") == 0){ flip = true; }
+                        if (checkAndMove("south") == 0){ flip = true; }
                     }
                 }
                 flip = false;
@@ -335,9 +362,9 @@ public class FloorSweeper {
             // Move south
             if (getCurrentTile().posY() < destination.posY()){
                 while(checkAndMove("south") == 0){
-                    if (flip){ checkAndMove("west"); }
+                    if (flip){ checkAndMove("east"); }
                     else{
-                        if (checkAndMove("east") == 0){ flip = true; }
+                        if (checkAndMove("west") == 0){ flip = true; }
                     }
                 }
                 flip = false;
@@ -363,10 +390,13 @@ public class FloorSweeper {
      * @throws IllegalArgumentException
      */
     public int checkAndMove(String direction) throws IllegalArgumentException{
+        scanSurroundings();
+        if (returning == false && isCleaning == false){ return 1;}
+        if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
         int obst;
         switch (direction.toLowerCase()) {
             // Move North
-            case "up":
+            case "north":
                 if (lookNorth() == null){
                     System.out.println("Cannot move " + direction +": Out of Bounds");
                     return 0;
@@ -377,14 +407,13 @@ public class FloorSweeper {
                     return 0;
                 }
                 else{
-                    posY--;
-                    depleteChargeMovement(lookNorth().getFloorType());
-                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
+                    depleteChargeMovement(lookNorth().getFloorType(),direction);
                     scanSurroundings();
+                    printLearnedMap();
                     return 1;
                 }
             // Move South
-            case "down":
+            case "south":
                 if (lookSouth() == null){
                     System.out.println("Cannot move " + direction +": Out of Bounds");
                     return 0;
@@ -395,14 +424,13 @@ public class FloorSweeper {
                     return 0;
                 }
                 else{
-                    posY++;
-                    depleteChargeMovement(lookSouth().getFloorType());
-                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
+                    depleteChargeMovement(lookSouth().getFloorType(),direction);
                     scanSurroundings();
+                    printLearnedMap();
                     return 1;
                 }
             // Move West
-            case "left":
+            case "west":
                 if(lookWest() == null){
                     System.out.println("Cannot move " + direction + ": Out of Bounds");
                     return 0;
@@ -413,14 +441,13 @@ public class FloorSweeper {
                     return 0;
                 }
                 else{
-                    posX--;
-                    depleteChargeMovement(lookWest().getFloorType());
-                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
+                    depleteChargeMovement(lookWest().getFloorType(),direction);
                     scanSurroundings();
+                    printLearnedMap();
                     return 1;
                 }
             // Move East
-            case "right":
+            case "east":
                 if (lookEast() == null){
                     System.out.println("Cannot move " + direction + ": Out of Bounds");
                     return 0;
@@ -431,10 +458,9 @@ public class FloorSweeper {
                     return 0;
                 }
                 else{
-                    posX++;
-                    depleteChargeMovement(lookEast().getFloorType());
-                    if (getCurrentTile().getDirt() > 0 && charge > MIN_ALLOWED_CHARGE){ cleanTile(); }
+                    depleteChargeMovement(lookEast().getFloorType(), direction);
                     scanSurroundings();
+                    printLearnedMap();
                     return 1;
                 }
             // Move Weast
@@ -444,7 +470,19 @@ public class FloorSweeper {
     }
 
     // Depletes charge based on terrain traversed
-    private void depleteChargeMovement(int destFloorType){
+    private void depleteChargeMovement(int destFloorType, String direction){
+        if (direction == "north"){
+            posY--;
+        }
+        else if (direction == "south"){
+            posY++;
+        }
+        else if (direction == "east"){
+            posX++;
+        }
+        else if (direction == "west"){
+            posX--;
+        }
         charge = charge - MovementPowerCalculator.calculateMovementPower(getCurrentTile().getFloorType(), destFloorType);
         updateLevels();
     }
@@ -454,10 +492,13 @@ public class FloorSweeper {
             for (int x = 0; x < learnedFloorPlan[y].length; x++){
                 if (learnedFloorPlan[x][y] == null)
                     System.out.print("X / X; ");
+                else if (x == posX && y == posY)
+                    System.out.print("Robot; ");
                 else
                     System.out.print(learnedFloorPlan[x][y].toString());
             }
             System.out.println();
         }
+        System.out.println();
     }
 }

@@ -21,7 +21,7 @@ public class DirtContainer {
 
         if (currentDirtLevel >= capacity) {
             notifyFull();
-            stopCleaning();
+            //stopCleaning();
         }
     }
 
