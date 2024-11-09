@@ -7,8 +7,15 @@ public class FloorNode {
     private boolean chargingStation;
     private int posX;
     private int posY;
+    private String data;
 
 
+    /**
+     * Construct a FloorNode
+     * @param string 11-digit code used to generate floor node
+     * @param x X-position of floor node
+     * @param y Y-position of floor node
+     */
     public FloorNode(String string, int x, int y){
 
         int[] parsed = new int[11];
@@ -17,6 +24,7 @@ public class FloorNode {
         }
         floorType = parsed[0];
         obstacle = parsed[1];
+        if (obstacle == 2){ chargingStation = true;}
         wallNorth = (parsed[2] == 1);
         wallSouth = (parsed[3] == 1);
         wallEast = (parsed[4] == 1);
@@ -28,6 +36,7 @@ public class FloorNode {
         dirt = parsed[10];
         posX = x;
         posY = y;
+        data = string;
     }
 
     //Returns X position on floormap
@@ -125,7 +134,7 @@ public class FloorNode {
         StringBuilder str = new StringBuilder();
         if (getObstacle() != 0){
             if (getObstacle() == 1) str.append("F / F");
-            else if (getObstacle() == 2) str.append("C / C");
+            else if (chargingStation) str.append("C / C");
             else if (getObstacle() == 3) str.append("S / S");
         }
         else{
