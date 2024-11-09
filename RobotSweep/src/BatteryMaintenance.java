@@ -19,9 +19,9 @@ public class BatteryMaintenance {
      */
     public static void startBatteryMaintenance (int startX, int startY, int destX, int destY, boolean isDirtFull,
                                                 boolean isCleanRemainder) {
-        FloorNode flr = new FloorNode(floorMap[startY][startX],startX,startY);
-        int typeStart = flr.getFloorType();
-        int typeDest = new FloorNode(floorMap[destY][destX],destX,destY).getFloorType();
+        int typeStart = Integer.parseInt(floorMap[startX][startY].substring(0, 1));
+        int typeDest = Integer.parseInt(floorMap[destX][destY].substring(0, 1));
+
         double cleanPower = 0.0;
 
         double movePower = MovementPowerCalculator.calculateMovementPower(typeStart, typeDest);

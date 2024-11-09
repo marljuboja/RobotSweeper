@@ -2,17 +2,17 @@ import java.util.ArrayList;
 
 public class DetectObstacle {
 
-    static String[][] floorMap = FloorPlan.getFloorPlan();
+    /*static String[][] floorMap = FloorPlan.getFloorPlan();
     static ArrayList<int[]> list = new ArrayList<>();
     public final static int maxIndex = 10;
     public DetectObstacle () {}
 
-    /**
+    *//**
      * Looks for obstacles within one tile away from current position
      * @author Marina Ljuboja
      * @param currentPositionX,currentPositionY the coordinates to the current position
      * @return array list of integer arrays with x and y coordinates of places with obstacles
-     */
+     *//*
     public static ArrayList<int[]> detectObs (int currentPositionX, int currentPositionY) {
 
         int obs = new FloorNode(floorMap[currentPositionX][currentPositionY],currentPositionX,currentPositionY).getObstacle();
@@ -115,6 +115,6 @@ public class DetectObstacle {
 
         return list;
 
-    }
+    }*/
 }
 

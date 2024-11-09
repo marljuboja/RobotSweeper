@@ -1,15 +1,15 @@
 public class DetectStairs {
-    public final static int maxIndex = 10;
+    /*public final static int maxIndex = 10;
     public static String[][] floorMap = FloorPlan.getFloorPlan();
 
     public DetectStairs() {}
 
-    /**
+    *//**
      * Looks for stairs within one tile away from current position
      * @author Marina Ljuboja
      * @param currentPositionX,currentPositionY the coordinates to the current position
      * @return integer array with x and y coordinates of place with stairs
-     */
+     *//*
     public static int[] detectStair (int currentPositionX, int currentPositionY) {
 
         int[] coor = new int[2];
@@ -78,6 +78,6 @@ public class DetectStairs {
 
         }
         return coor;
-    }
+    }*/
 
 }
