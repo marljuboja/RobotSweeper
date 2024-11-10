@@ -252,5 +252,16 @@ public class FloorPlan {
         return floorPlan;
     }
 
+    public static String[][] scatterDirt(String[][] floorplan){
+        String[][] dirtyFloor = getFloorPlan2();
+        for(int i = 0; i < 10; i++){
+            for (int j = 0; j < 10; j++){
+                if (Math.random()*3 > 2 && dirtyFloor[i][j].charAt(1) == '0'){
+                    dirtyFloor[i][j] = dirtyFloor[i][j].substring(0,10) + Math.round(Math.random()*3);
+                }
+            }
+        }
+        return dirtyFloor;
+    }
 
 }
