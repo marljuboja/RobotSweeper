@@ -29,8 +29,9 @@ public class FloorSweeper {
 
     //True if returning to charging station, false if cleaning
     private boolean returning;
-
     private boolean isCleaning;
+
+    private ActivityLogger logger;
 
     //Constructor for robot
     /**Initialize robot at 0/0
@@ -65,6 +66,7 @@ public class FloorSweeper {
         returning = false;
         dirt = new DirtContainer();
         scanSurroundings();
+        logger = new ActivityLogger("SweeperLog.txt");
     }
 
     //Returns battery charge level of robot
@@ -156,26 +158,32 @@ public class FloorSweeper {
      * Cleans current tile
      */
     public void cleanTile(){
+        int dirtCleanedTotal = 0;
         FloorNode currentTile = getCurrentTile();
         while(!returning && currentTile.getDirt() > 0){
             currentTile.cleanDirt();
             dirt.addDirt();
             charge = charge-(currentTile.getFloorType()+1);
             learnedFloorPlan[posX][posY] = currentTile; 
+            dirtCleanedTotal++;
             updateLevels();
         }
+        if (!returning){ logger.logCleaning(posX, posY, dirtCleanedTotal); }
     }
 
     // Run this method after changing dirt/battery to check if returning thresholds are met
     private void updateLevels(){
         if (charge <= 0) {
             System.out.println("Sweeper has run out of battery and has shut down.");
+            logger.logEvent("Sweeper ran out of power while cleaning.");
             java.lang.System.exit(0);
         }
         if ((dirt.isFull() || charge < MIN_ALLOWED_CHARGE) && returning == false){
+            if (dirt.isFull()){ logger.logEvent("Dirt container full, please empty robot at charging station.");}
             returning = true;
             returnToStation();
         }
+        logger.logPowerUsage(charge);
     }
 
     /**
@@ -184,19 +192,23 @@ public class FloorSweeper {
      * Once recharged, moves back to where it left off.
      */
     public void returnToStation(){
+        logger.logEvent("Returning to charging station.");
         returning = true;
         FloorNode closestStation = getClosestChargingStation();
         if (moveTo(closestStation) == 1){
             charge = MAX_ALLOWED_CHARGE;
+            logger.logEvent("Battery recharged, resuming sweep.");
             if (dirt.isFull()){
                 dirt.emptyContainer();
+                logger.logEvent("Bin emptied, resuming sweep.");
             }
             returning = false;
         }
         isCleaning = dirtExists();
         if(isCleaning){ beginSweep(); }
         else{
-            System.out.println("Sweep complete. All known tiles are clean");
+            System.out.println("Sweep complete. All known tiles are clean.");
+            logger.logEvent("Sweeping complete. All known tiles are clean.");
             java.lang.System.exit(0);
         }
     }
@@ -477,15 +489,19 @@ public class FloorSweeper {
     private void depleteChargeMovement(int destFloorType, String direction){
         if (direction == "north"){
             posY--;
+            logger.logMovement(posX, posY+1, posX, posY, "north");
         }
         else if (direction == "south"){
             posY++;
+            logger.logMovement(posX, posY-1, posX, posY, "south");
         }
         else if (direction == "east"){
             posX++;
+            logger.logMovement(posX-1, posY, posX, posY, "east");
         }
         else if (direction == "west"){
             posX--;
+            logger.logMovement(posX+1, posY, posX, posY, "west");
         }
         charge = charge - MovementPowerCalculator.calculateMovementPower(getCurrentTile().getFloorType(), destFloorType);
         updateLevels();
