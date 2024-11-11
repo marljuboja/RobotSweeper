@@ -9,7 +9,7 @@ public class ActivityLogger {
     // Constructor to initialize the logger with a file path
     public ActivityLogger(String filePath) {
         try {
-            writer = new BufferedWriter(new FileWriter(filePath, true));
+            writer = new BufferedWriter(new FileWriter(filePath,false));
         } catch (IOException e) {
             System.err.println("Error initializing logger: " + e.getMessage());
         }
@@ -24,8 +24,8 @@ public class ActivityLogger {
 
     // Method to log movements
     public void logMovement(int startX, int startY, int endX, int endY, String direction) {
-        String logEntry = String.format("%s - Moved from (%d, %d) to (%d, %d) via %s%n",
-                new Date(), startX, startY, endX, endY, direction);
+        String logEntry = String.format("%s - Moved %s from (%d, %d) to (%d, %d)%n",
+                new Date(), direction, startX, startY, endX, endY);
         writeLog(logEntry);
     }
 
@@ -43,8 +43,8 @@ public class ActivityLogger {
         writeLog(logEntry);
     }
 
-    // Method to log recharge events
-    public void logRecharge(String action) {
+    // Method to log custom events
+    public void logEvent(String action) {
         String logEntry = String.format("%s - %s%n", new Date(), action);
         writeLog(logEntry);
     }
