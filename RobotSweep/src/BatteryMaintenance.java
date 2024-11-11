@@ -1,6 +1,6 @@
 public class BatteryMaintenance {
     
-    public static final int minBattery = 50;
+    public static final double minBattery = 50.0;
     public static double maxBatteryLevel = 250.0;
     public static double currentBatteryLevel = 250.0;
     static String[][] floorMap = FloorPlan.getFloorPlan();
@@ -17,28 +17,18 @@ public class BatteryMaintenance {
      * @author Marina Ljuboja
      * @return boolean
      */
-    public static void startBatteryMaintenance (int startX, int startY, int destX, int destY, boolean isDirtFull,
+    public static void startBatteryMaintenance (int fromTileType, int toTileType, boolean isDirtFull,
                                                 boolean isCleanRemainder) {
-        int typeStart = Integer.parseInt(floorMap[startX][startY].substring(0, 1));
-        int typeDest = Integer.parseInt(floorMap[destX][destY].substring(0, 1));
 
         double cleanPower = 0.0;
 
-        double movePower = MovementPowerCalculator.calculateMovementPower(typeStart, typeDest);
+        double movePower = MovementPowerCalculator.calculateMovementPower(fromTileType, toTileType);
 
-        if (startX >= maxIndex || startX < 0) {
+        if (fromTileType >= 3 || fromTileType < 0) {
             throw new IndexOutOfBoundsException("parameters for BatteryMaintenance.startBatteryMaintenace are not good");
         }
 
-        if (startY >= maxIndex || startY < 0) {
-            throw new IndexOutOfBoundsException("parameters for BatteryMaintenance.startBatteryMaintenace are not good");
-        }
-
-        if (destX >= maxIndex || destX < 0) {
-            throw new IndexOutOfBoundsException("parameters for BatteryMaintenance.startBatteryMaintenace are not good");
-        }
-
-        if (destY >= maxIndex || destY < 0) {
+        if (toTileType >= 3 || toTileType < 0) {
             throw new IndexOutOfBoundsException("parameters for BatteryMaintenance.startBatteryMaintenace are not good");
         }
 
@@ -51,7 +41,7 @@ public class BatteryMaintenance {
         }
 
         if ((flag == -1) || (isCleanRemainder == true)) {
-            cleanPower = MovementPowerCalculator.calculateMovementPower(typeStart, typeDest);
+            cleanPower = MovementPowerCalculator.calculateMovementPower(fromTileType, toTileType);
         }
 
         double totalPower = movePower + cleanPower;
@@ -66,11 +56,10 @@ public class BatteryMaintenance {
         else {
             flag = 0;
             ////////// needs to be recharged once at station
+            //This is called in FloorSweeper instead of here:
             //floorS.returnToStation();
             //isAtCS();
         }
-
-
 
     }
 
